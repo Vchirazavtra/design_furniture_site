@@ -1,0 +1,86 @@
+<!-- templates/home.html -->
+{% extends 'base.html' %}
+
+{% block title %}Главная | Дизайнерская мебель{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <!-- Баннер компании -->
+    <section class="hero-banner">
+        <div class="hero-text">
+            <h1>Дизайнерская мебель премиум-класса</h1>
+            <p>Создаём пространства, в которые хочется возвращаться.
+               Натуральные материалы, продуманный дизайн и безупречное качество.</p>
+            <a href="{{ url_for('catalog') }}" class="btn btn-primary">Перейти в каталог</a>
+        </div>
+        <div class="hero-image">
+            <img src="{{ url_for('static', filename='images/banner/main-banner.jpg') }}"
+                 alt="Design Furniture Banner"
+                 class="hero-img">
+        </div>
+
+    </section>
+
+    <!-- Витрина: 5 случайных товаров -->
+    <section class="section">
+        <div class="section-header">
+            <h2>Подборка для вас</h2>
+            <div class="carousel-controls">
+                <button class="carousel-btn" data-direction="left" data-target="#products-carousel">←</button>
+                <button class="carousel-btn" data-direction="right" data-target="#products-carousel">→</button>
+            </div>
+        </div>
+
+        <div id="products-carousel" class="product-carousel">
+            {% for p in products %}
+                <div class="product-card">
+                    <a href="{{ url_for('product_detail', product_id=p.id) }}">
+                        <div class="product-image">
+                            {% if p.image_url %}
+                                <img src="{{ url_for('static', filename=p.image_url[1:]) }}" alt="{{ p.name }}">
+                            {% else %}
+                                <div class="product-image-placeholder">Нет фото</div>
+                            {% endif %}
+                        </div>
+                    </a>
+                    <div class="product-info">
+                        <h3>{{ p.name }}</h3>
+                        {% if p.short_desc %}
+                            <p>{{ p.short_desc }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Блок о компании -->
+    <section class="section about-section">
+        <h2>Почему выбирают нас</h2>
+        <div class="about-grid">
+            <div class="about-item">
+                <h3>Авторский дизайн</h3>
+                <p>Мы работаем с ведущими дизайнерами и архитектурными бюро,
+                   создавая коллекции, которых нет в массовых магазинах.</p>
+            </div>
+            <div class="about-item">
+                <h3>Натуральные материалы</h3>
+                <p>Только проверенные поставщики древесины, текстиля и фурнитуры.
+                   Мы следим за экологичностью и безопасностью.</p>
+            </div>
+            <div class="about-item">
+                <h3>Индивидуальный подход</h3>
+                <p>Помогаем подобрать решения под ваш интерьер, учитывая пространство,
+                   свет и образ жизни.</p>
+            </div>
+            <div class="about-item">
+                <h3>Контроль качества</h3>
+                <p>Каждое изделие проходит несколько этапов проверки.
+                   Мы уверены в мебели, которую отгружаем клиентам.</p>
+            </div>
+        </div>
+    </section>
+
+</div>
+{% endblock %}

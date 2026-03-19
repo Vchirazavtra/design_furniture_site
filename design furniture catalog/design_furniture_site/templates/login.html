@@ -1,0 +1,73 @@
+<!-- templates/login.html -->
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>Вход | Design Furniture</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-body">
+    <div class="auth-overlay">
+        <div class="auth-modal">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="flash flash-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <!-- Вход -->
+            <div id="login-form-block" class="auth-form-block active">
+                <h2>Вход</h2>
+                <form method="post" action="{{ url_for('login') }}">
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+
+                    <label>Пароль</label>
+                    <input type="password" name="password" required>
+
+                    <button type="submit" class="btn btn-primary">Войти</button>
+                </form>
+
+                <div class="auth-switch">
+                    Нет аккаунта?
+                    <a href="#" id="show-register">Зарегистрироваться</a>
+                </div>
+            </div>
+
+            <!-- Регистрация -->
+            <div id="register-form-block" class="auth-form-block">
+                <button type="button" class="back-btn" id="back-to-login">
+                    ← Вернуться
+                </button>
+
+                <h2>Регистрация</h2>
+                <form method="post" action="{{ url_for('register') }}">
+                    <label>ФИО</label>
+                    <input type="text" name="full_name" required>
+
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+
+                    <label>Телефон</label>
+                    <input type="text" name="phone">
+
+                    <label>Пароль</label>
+                    <input type="password" name="password" required>
+
+                    <label>Подтверждение пароля</label>
+                    <input type="password" name="password_confirm" required>
+
+                    <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

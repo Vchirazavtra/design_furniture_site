@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Профиль | Дизайнерская мебель{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section class="section">
+        <h1>Профиль</h1>
+
+        <div class="profile-info">
+            <div><strong>ФИО:</strong> {{ user.full_name }}</div>
+            <div><strong>Email:</strong> {{ user.email }}</div>
+            <div><strong>Телефон:</strong> {{ user.phone or "—" }}</div>
+            <div><strong>Роль:</strong>
+                {% if user.role_id == 1 %}
+                    Администратор
+                {% elif user.role_id == 2 %}
+                    Менеджер
+                {% else %}
+                    Покупатель
+                {% endif %}
+            </div>
+        </div>
+
+        <h2>Мои заказы</h2>
+
+        {% if orders %}
+            <table class="cart-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Дата</th>
+                        <th>Статус</th>
+                        <th>Сумма</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for o in orders %}
+                    <tr>
+                        <td>{{ o.id }}</td>
+                        <td>{{ o.created_at }}</td>
+                        <td>{{ o.status_name }}</td>
+                        <td>{{ "%.0f"|format(o.total_amount) }} ₽</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>У вас еще нет заказов.</p>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

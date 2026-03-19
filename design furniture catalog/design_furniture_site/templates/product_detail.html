@@ -1,0 +1,74 @@
+<!-- templates/product_detail.html -->
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }} | Дизайнерская мебель{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section class="section product-detail-section">
+        <div class="product-detail-layout">
+            <!-- Картинки слева -->
+            <div class="product-images-block">
+                {% if images %}
+                    <div class="product-main-image">
+                        <img id="main-product-image"
+                             src="{{ url_for('static', filename=images[0].image_url[1:]) }}"
+                             alt="{{ product.name }}">
+                    </div>
+                    <div class="product-thumbnails">
+                        {% for img in images %}
+                            <div class="product-thumb">
+                                <img src="{{ url_for('static', filename=img.image_url[1:]) }}"
+                                     alt="{{ product.name }}"
+                                     class="product-thumb-img"
+                                     data-full="{{ url_for('static', filename=img.image_url[1:]) }}">
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="product-main-image">
+                        <div class="product-image-placeholder">Нет фото</div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Информация справа -->
+            <div class="product-info-block">
+                <h1>{{ product.name }}</h1>
+
+                {% if product.base_price %}
+                    <div class="product-detail-price">
+                        {{ "%.0f"|format(product.base_price) }} ₽
+                    </div>
+                {% endif %}
+
+                {% if product.short_desc %}
+                    <p class="product-short-desc">{{ product.short_desc }}</p>
+                {% endif %}
+
+                {% if product.full_desc %}
+                    <p class="product-full-desc">{{ product.full_desc }}</p>
+                {% endif %}
+
+                <div class="product-detail-actions">
+                    {% if not user %}
+                        <a href="{{ url_for('login_page') }}" class="btn btn-primary">
+                            Войти, чтобы добавить в корзину
+                        </a>
+                    {% else %}
+                        {% if in_cart %}
+                            <button class="btn btn-disabled" disabled>Уже в корзине</button>
+                        {% else %}
+                            <form method="post" action="{{ url_for('add_to_cart', product_id=product.id) }}">
+                                <button type="submit" class="btn btn-primary">
+                                    Добавить в корзину
+                                </button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+<header class="site-header">
+    <div class="container header-inner">
+        <div class="logo">
+            <span class="logo-mark">МА</span>
+            <span class="logo-text">МебельАрт</span>
+        </div>
+
+        <nav class="main-nav">
+            <a href="{{ url_for('home') }}">Главная</a>
+            <a href="{{ url_for('catalog') }}">Каталог</a>
+            {% if user %}
+                <a href="{{ url_for('cart') }}">Корзина</a>
+                {% if user.role_id == 1 %}
+                    <a href="{{ url_for('admin_page') }}">Администрирование</a>
+                {% endif %}
+            {% endif %}
+        </nav>
+
+        <div class="header-actions">
+            {% if user %}
+                <a href="{{ url_for('profile') }}" class="user-name-link">
+                    {{ user.full_name }}
+                </a>
+                <a href="{{ url_for('logout') }}" class="btn btn-outline">Выйти</a>
+            {% else %}
+                <a href="{{ url_for('login_page') }}" class="btn btn-primary">Войти</a>
+            {% endif %}
+        </div>
+    </div>
+</header>

@@ -1,0 +1,96 @@
+<!-- templates/catalog.html -->
+{% extends 'base.html' %}
+
+{% block title %}Каталог | Дизайнерская мебель{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section class="section">
+        <h1>Каталог</h1>
+        <div class="catalog-layout">
+            <!-- Панель фильтров слева -->
+            <aside class="catalog-filters">
+                <form method="get" action="{{ url_for('catalog') }}" class="filters-form">
+                    <div class="filter-block">
+                        <h3>Поиск</h3>
+                        <input type="text" name="q" placeholder="Название товара"
+                               value="{{ search_query or '' }}">
+                    </div>
+
+                    <div class="filter-block">
+                        <h3>Категория</h3>
+                        <ul class="filter-list">
+                            <li>
+                                <label>
+                                    <input type="radio" name="category" value=""
+                                           {% if not current_category_id %}checked{% endif %}>
+                                    Все категории
+                                </label>
+                            </li>
+                            {% for c in categories %}
+                            <li>
+                                <label>
+                                    <input type="radio" name="category" value="{{ c.id }}"
+                                           {% if current_category_id == c.id %}checked{% endif %}>
+                                    {{ c.name }}
+                                </label>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="filter-block">
+                        <h3>Цена, ₽</h3>
+                        <div class="price-filter-row">
+                            <input type="number" name="price_from" min="0" step="1"
+                                   placeholder="От"
+                                   value="{{ price_from if price_from is not none else '' }}">
+                            <input type="number" name="price_to" min="0" step="1"
+                                   placeholder="До"
+                                   value="{{ price_to if price_to is not none else '' }}">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary filter-submit-btn">
+                        Применить
+                    </button>
+                </form>
+            </aside>
+
+            <!-- Список товаров -->
+            <div class="catalog-content">
+                {% if products %}
+                    <div class="catalog-grid">
+                        {% for p in products %}
+                        <div class="product-card">
+                            <a href="{{ url_for('product_detail', product_id=p.id) }}">
+                                <div class="product-image">
+                                    {% if p.image_url %}
+                                        <img src="{{ url_for('static', filename=p.image_url[1:]) }}" alt="{{ p.name }}">
+                                    {% else %}
+                                        <div class="product-image-placeholder">Нет фото</div>
+                                    {% endif %}
+                                </div>
+                            </a>
+                            <div class="product-info">
+                                <h3>{{ p.name }}</h3>
+                                {% if p.base_price %}
+                                    <div class="product-price">
+                                        {{ "%.0f"|format(p.base_price) }} ₽
+                                    </div>
+                                {% endif %}
+                                {% if p.short_desc %}
+                                    <p>{{ p.short_desc }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>По выбранным фильтрам товаров не найдено.</p>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Администрирование | Дизайнерская мебель{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section class="section">
+        <h1>Администрирование</h1>
+
+        <div class="admin-layout">
+            <!-- Блок: Создание нового товара (первый, сверху) -->
+            <div class="admin-block">
+                <h2>Создать новый товар</h2>
+                <form method="post"
+                      action="{{ url_for('admin_page') }}"
+                      class="admin-form"
+                      enctype="multipart/form-data">
+                    <input type="hidden" name="form_type" value="create_product">
+
+                    <label>Название</label>
+                    <input type="text" name="name" required>
+
+                    <label>Категория</label>
+                    <select name="category_id" required>
+                        <option value="">Выберите категорию</option>
+                        {% for c in categories %}
+                            <option value="{{ c.id }}">{{ c.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <label>Коллекция</label>
+                    <select name="collection_id">
+                        <option value="">Без коллекции</option>
+                        {% for col in collections %}
+                            <option value="{{ col.id }}">{{ col.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <label>Краткое описание</label>
+                    <textarea name="short_desc" rows="3"></textarea>
+
+                    <label>Базовая цена, ₽</label>
+                    <input type="number" name="base_price" step="0.01" min="0">
+
+                    <label>Фотографии товара (до 5 файлов)</label>
+                    <input type="file" name="images" multiple accept="image/*">
+                    <div class="help-text">
+                        Можно выбрать до 5 изображений. Первое станет основным.
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        Создать товар
+                    </button>
+                </form>
+            </div>
+
+            <!-- Блок: Редактирование пользователей (ниже) -->
+            <div class="admin-block">
+                <h2>Пользователи</h2>
+                <table class="cart-table admin-users-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>ФИО</th>
+                            <th>Email</th>
+                            <th>Роль</th>
+                            <th>Активен</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in users %}
+                        <tr>
+                            <td>{{ u.id }}</td>
+                            <td>{{ u.full_name }}</td>
+                            <td>{{ u.email }}</td>
+                            <td>
+                                <form method="post"
+                                      action="{{ url_for('admin_page') }}"
+                                      class="admin-user-form">
+                                    <input type="hidden" name="form_type" value="update_user">
+                                    <input type="hidden" name="user_id" value="{{ u.id }}">
+
+                                    <select name="role_id">
+                                        {% for r in roles %}
+                                            <option value="{{ r.id }}"
+                                                    {% if u.role_id == r.id %}selected{% endif %}>
+                                                {{ r.name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                            </td>
+                            <td>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" name="is_active"
+                                               {% if u.is_active %}checked{% endif %}>
+                                        Активен
+                                    </label>
+                            </td>
+                            <td>
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        Сохранить
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </section>
+</div>
+{% endblock %}

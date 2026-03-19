@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Корзина | Дизайнерская мебель{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section class="section">
+        <h1>Корзина</h1>
+
+        {% if items %}
+            <table class="cart-table">
+                <thead>
+                    <tr>
+                        <th>Товар</th>
+                        <th>Цена</th>
+                        <th>Количество</th>
+                        <th>Сумма</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('product_detail', product_id=item.product_id) }}">
+                                {{ item.name }}
+                            </a>
+                        </td>
+                        <td>{{ "%.0f"|format(item.price_at_add) }} ₽</td>
+                        <td>
+                            <form method="post" action="{{ url_for('update_cart_item') }}" class="cart-qty-form">
+                                <input type="hidden" name="item_id" value="{{ item.item_id }}">
+                                <input type="number" name="quantity" min="1"
+                                       value="{{ item.quantity }}">
+                                <button type="submit" class="btn btn-primary btn-sm">OK</button>
+                            </form>
+                        </td>
+                        <td>
+                            {{ "%.0f"|format(item.quantity * item.price_at_add) }} ₽
+                        </td>
+                        <td>
+                            <form method="post" action="{{ url_for('remove_cart_item') }}">
+                                <input type="hidden" name="item_id" value="{{ item.item_id }}">
+                                <button type="submit" class="btn btn-outline btn-sm">
+                                    Удалить
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="cart-summary">
+                <div class="cart-total">
+                    Итого: <span>{{ "%.0f"|format(total_amount) }} ₽</span>
+                </div>
+                <form method="post" action="{{ url_for('cart_checkout') }}">
+                    <button type="submit" class="btn btn-primary">
+                        Купить
+                    </button>
+                </form>
+            </div>
+        {% else %}
+            <p>Ваша корзина пуста.</p>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}
